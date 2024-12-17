@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import "./Dashboard.css"
 import bg from "../../assets/help.png"
 import Header from '../../components/Header/Header'
@@ -10,8 +10,26 @@ import { IoIosDocument } from 'react-icons/io'
 import Cards from '../../components/Cards/Cards'
 import Hero from '../../components/Hero/Hero'
 import LineChartPerson from '../../components/LineChartPerson'
+import axios from 'axios'
+import { useStore } from '../../zustand'
+import quesion from "../../assets/quesion.png"
 
 const Dashboard = () => {
+  const token = useStore(state => state.token)
+  const logout = useStore(state => state.logout)
+
+  useEffect(()=> {
+    axios
+      .get("https://dummyjson.com/auth/me", {
+        headers: {
+          Authorization: token
+        }
+      })
+      .then(res => console.log(res))
+      .catch(err => {
+        logout()
+      })
+  }, [])
   return (
     <main className='flex gap-16'>
         <section className={`min-w-[300px] h-[935px] back backdrop-blur-3xl bg-[url('./assets/bg.png')] bg-no-repeat bg-center bg-cover rounded-2xl sticky top-1 my-2 left-2 border-[1px] border-[#1e456d]`}>
@@ -50,11 +68,23 @@ const Dashboard = () => {
                   </NavLink>
               </div>
             </div>
-            <div className='w-full rounded-xl'>
+            <div className='w-full rounded-xl relative'>
               <div className='relative'>
                 <img src={bg} alt="" className='w-full rounded-xl absolute bottom-[-100%]'/>
               </div>
-            </div>
+              <div className='absolute bottom-[-100%] p-4 flex flex-col justify-between h-[194px] w-full'>
+                <div>
+                  <img src={quesion} alt="" />
+                </div>
+                <div>
+                  <h3 className='text-white text-[20px] font-semibold'>Need help ?</h3>
+                  <p className='text-white'>Please ckeck our docs</p>
+                </div>
+                <div className='w-full'>
+                  <button className='w-full py-3 rounded-xl bg-[#0A0E23B5] text-white backdrop-blur-md'>Documentation</button>
+                </div>
+              </div>
+              </div>
           </div>
         </section>
         <section className='w-full mr-9'>
